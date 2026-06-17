@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "Fit21",
+  "description": "A cinematic fitness landing page for Fit21.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -548,6 +548,8 @@
 
     window.onYouTubeIframeAPIReady = function() {
       player = new YT.Player('yt-player', {
+        height: '2160',
+        width: '3840',
         videoId: 'GsPvopOOyBs',
         playerVars: {
           autoplay: 1, 
@@ -563,7 +565,7 @@
         },
         events: {
           onReady: function(e) {
-            e.target.setPlaybackQuality('hd1080');
+            e.target.setPlaybackQuality('hd2160');
             e.target.playVideo();
           }
         }
