@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fit21</title>
+  
+  <!-- PWA SETUP -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00E87A">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Fit21">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/12563/12563330.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Base / Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0A0A0A;
+      color: white;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* SECTION 1: HERO */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100svh;
+      min-height: 600px;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* VIDEO BACKGROUND */
+    .video-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 177.78vh;
+      height: 56.25vw;
+      min-width: 100%;
+      min-height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+    }
+
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.3) 0%,
+        rgba(10,10,10,0.6) 50%,
+        rgba(10,10,10,0.95) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    .eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: #00E87A;
+      margin-bottom: 20px;
+    }
+
+    .hero-h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 13vw, 108px);
+      line-height: 0.85;
+      letter-spacing: -4px;
+      text-transform: uppercase;
+      color: white;
+      margin-bottom: 24px;
+    }
+
+    .hero-h1 .accent {
+      color: #00E87A;
+    }
+
+    .hero-subtitle {
+       font-family: 'Inter', sans-serif;
+       font-weight: 400;
+       font-size: 18px;
+       color: rgba(255,255,255,0.7);
+       max-width: 460px;
+       line-height: 1.625;
+       margin: 0 auto 40px;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #25D366;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 20px 48px;
+      border-radius: 9999px;
+      border: none;
+      text-decoration: none;
+      box-shadow: 0 0 40px rgba(37,211,102,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .pill-btn.small {
+      font-size: 15px;
+      padding: 15px 32px;
+    }
+
+    .pill-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(37,211,102,0.35);
+    }
+    
+    .pill-btn.small:hover {
+      transform: scale(1.05);
+    }
+
+    .pill-btn svg {
+      fill: currentColor;
+      width: 24px;
+      height: 24px;
+    }
+
+    .pill-btn.small svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .microcopy {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.025em;
+      margin-top: 16px;
+    }
+
+    /* SOUND TOGGLE */
+    .sound-toggle {
+      position: absolute;
+      bottom: 32px;
+      right: 32px;
+      z-index: 3;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sound-toggle svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    #icon-sound {
+      display: none;
+    }
+
+    /* SECTION 2: STATS */
+    .stats-section {
+      background: #FFFFFF;
+      color: #0A0A0A;
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 96px;
+      width: 100%;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 480px) {
+      .stats-row {
+        gap: 40px;
+      }
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: 52px;
+      color: #0A0A0A;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      width: 100%;
+      max-width: 512px;
+      background: #EEE;
+      margin: 0 auto 32px;
+      border: none;
+    }
+
+    .stats-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 30px;
+      letter-spacing: 0;
+      color: #0A0A0A;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .stats-p {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.5;
+      max-width: 512px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+
+    /* FOOTER */
+    .footer {
+      height: 60px;
+      background: #0A0A0A;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .footer p {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* PWA INSTALL MODAL */
+    .install-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88); /* Or make it transparent if you want toast overlay */
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .install-overlay.show {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      border: 1px solid #eee;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      grid-template-areas: 
+        "icon title"
+        "icon subtitle"
+        "instructions instructions"
+        "button button";
+      gap: 4px 16px;
+      text-align: left;
+    }
+    
+    .btn-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+
+    .logo-img {
+      grid-area: icon;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #f5f5f5;
+      padding: 8px;
+      display: block;
+      margin: 0;
+    }
+
+    .modal-title {
+      grid-area: title;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #0A0A0A;
+      text-transform: uppercase;
+      align-self: end;
+      margin-bottom: 0;
+      padding-right: 32px;
+    }
+
+    .modal-subtitle {
+      grid-area: subtitle;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 4px;
+      align-self: start;
+      line-height: 1.4;
+    }
+
+    .install-instructions {
+      grid-area: instructions;
+      display: none;
+      background: #f8f8f8;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      margin-bottom: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.8;
+      margin-top: 16px;
+    }
+
+    .install-instructions ol {
+      margin-left: 20px;
+      margin-top: 4px;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    #btnInstall {
+      grid-area: button;
+      width: 100%;
+      justify-content: center;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 15px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECTION 1: HERO -->
+  <section class="hero">
+    <div id="yt-player" class="video-container"></div>
+    <div class="video-overlay"></div>
+    
+    <div class="hero-content">
+      <div class="eyebrow">FEEL 21 AGAIN</div>
+      <h1 class="hero-h1">
+        Chase the<br>
+        <span class="accent">Streak.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Daily challenges. A community that shows up every single day.
+      </p>
+      <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" class="pill-btn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.06-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Join the Community
+      </a>
+      <div class="microcopy">Free to join. No app needed yet.</div>
+    </div>
+
+    <button class="sound-toggle" id="soundBtn" aria-label="Toggle Sound">
+      <svg id="icon-muted" viewBox="0 0 24 24">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+      <svg id="icon-sound" viewBox="0 0 24 24">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+    </button>
+  </section>
+
+  <!-- SECTION 2: STATS -->
+  <section class="stats-section">
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">21</div>
+        <div class="stat-label">days to a habit</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">Daily</div>
+        <div class="stat-label">new challenges</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">Free</div>
+        <div class="stat-label">to get started</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <h2 class="stats-h2">Built around one idea.</h2>
+    <p class="stats-p">
+      Most people start and quit in three days. Fit21 fixes that with daily challenges, streak tracking, and a group of people who show up together. Join and let's move.
+    </p>
+
+    <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" class="pill-btn small">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.06-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Join on WhatsApp
+    </a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 Fit21. All rights reserved.</p>
+  </footer>
+
+  <!-- PWA INSTALL MODAL -->
+  <div id="installOverlay" class="install-overlay">
+    <div class="modal-card">
+      <button id="btnClose" class="btn-close">&times;</button>
+      <img src="https://cdn-icons-png.flaticon.com/512/12563/12563330.png" alt="Fit21 Logo" class="logo-img">
+      <h3 class="modal-title">Install Fit21</h3>
+      <p class="modal-subtitle">Add to your home screen for quick access to daily challenges.</p>
+      
+      <div id="installInstructions" class="install-instructions">
+        <strong>To install manually:</strong>
+        <ol>
+          <li>Tap the browser Menu (⋮) or Share icon.</li>
+          <li>Select Install app or Add to Home Screen.</li>
+        </ol>
+      </div>
+      
+      <button id="btnInstall" class="pill-btn">Install App</button>
+    </div>
+  </div>
+
+  <!-- SCRIPT BLOCK 1 & 2 -->
+  <script>
+    // SCRIPT BLOCK 1 — YouTube
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    let player;
+    let isMuted = true;
+    const soundBtn = document.getElementById('soundBtn');
+    const iconMuted = document.getElementById('icon-muted');
+    const iconSound = document.getElementById('icon-sound');
+
+    window.onYouTubeIframeAPIReady = function() {
+      player = new YT.Player('yt-player', {
+        videoId: 'GsPvopOOyBs',
+        playerVars: {
+          autoplay: 1, 
+          controls: 0, 
+          loop: 1,
+          playlist: 'GsPvopOOyBs,YTIwk-CHgBo',
+          mute: 1, 
+          playsinline: 1, 
+          rel: 0,
+          showinfo: 0, 
+          modestbranding: 1, 
+          iv_load_policy: 3
+        },
+        events: {
+          onReady: function(e) {
+            e.target.setPlaybackQuality('hd1080');
+            e.target.playVideo();
+          }
+        }
+      });
+    };
+
+    soundBtn.addEventListener('click', function() {
+      if (!player || typeof player.isMuted !== 'function') return;
+      if (isMuted) {
+        player.unMute();
+        player.setVolume(80);
+        isMuted = false;
+        iconMuted.style.display = 'none';
+        iconSound.style.display = 'block';
+      } else {
+        player.mute();
+        isMuted = true;
+        iconMuted.style.display = 'block';
+        iconSound.style.display = 'none';
+      }
+    });
+
+    // SCRIPT BLOCK 2 — Service Worker + PWA Install
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(function(err) { 
+            console.warn('SW failed:', err); 
+          });
+      });
+    }
+
+    let deferredPrompt = null;
+    const overlay = document.getElementById('installOverlay');
+    const btnInstall = document.getElementById('btnInstall');
+    const btnClose = document.getElementById('btnClose');
+    const instructions = document.getElementById('installInstructions');
+
+    const isStandalone = () =>
+      window.matchMedia('(display-mode: standalone)').matches 
+      || navigator.standalone === true;
+
+    const isIOS = () => 
+      /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (!isStandalone() && !sessionStorage.getItem('pwaSkipped')) {
+        setTimeout(() => overlay.classList.add('show'), 2500);
+      }
+    });
+
+    window.addEventListener('load', function() {
+      if (isIOS() && !isStandalone() && !sessionStorage.getItem('pwaSkipped')) {
+        setTimeout(function() {
+          btnInstall.style.display = 'none';
+          instructions.style.display = 'block';
+          overlay.classList.add('show');
+        }, 3000);
+      }
+    });
+
+    btnInstall.addEventListener('click', async function() {
+      if (deferredPrompt) {
+        try {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          overlay.classList.remove('show');
+        } catch(err) {
+          btnInstall.style.display = 'none';
+          instructions.style.display = 'block';
+        }
+      } else {
+        btnInstall.style.display = 'none';
+        instructions.style.display = 'block';
+      }
+    });
+
+    btnClose.addEventListener('click', function() {
+      overlay.classList.remove('show');
+      sessionStorage.setItem('pwaSkipped', '1');
+    });
+
+    window.addEventListener('appinstalled', function() {
+      overlay.classList.remove('show');
+      deferredPrompt = null;
+    });
+  </script>
+</body>
+</html>

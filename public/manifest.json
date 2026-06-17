@@ -1,0 +1,20 @@
+{
+  "name": "Fit21",
+  "short_name": "Fit21",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00E87A",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/12563/12563330.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/12563/12563330.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
