@@ -208,88 +208,196 @@
       display: none;
     }
 
-    /* SECTION 2: STATS */
-    .stats-section {
-      background: linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)), url('https://images.unsplash.com/photo-1559166631-ef208440c75a?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA==') center/cover no-repeat;
-      color: #FFFFFF;
-      padding: 64px 48px;
-      display: flex;
-      flex-direction: column;
+    .btn-secondary {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .stats-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 96px;
-      width: 100%;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-
-    @media (max-width: 480px) {
-      .stats-row {
-        gap: 40px;
-      }
-    }
-
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-family: 'Syne', sans-serif;
-      font-weight: 900;
-      font-size: 52px;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
       color: #FFFFFF;
-      letter-spacing: -2px;
-      line-height: 1;
-      margin-bottom: 0;
-    }
-
-    .stat-label {
       font-family: 'Inter', sans-serif;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 9999px;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      margin-top: 12px;
+      transition: background 0.2s, transform 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-secondary:hover, .btn-secondary:active {
+      background: rgba(255,255,255,0.16);
+      transform: translateY(-2px);
+    }
+
+    /* EARLY FEATURES */
+    .features-section {
+      background: #FFFFFF;
+      padding: 72px 24px 80px;
+    }
+
+    .features-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .features-eyebrow {
+      font-family: 'Inter', sans-serif;
       font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 4px;
+      color: #00E87A;
+      text-align: center;
+      margin-bottom: 14px;
     }
 
-    .divider {
-      height: 1px;
-      width: 100%;
-      max-width: 512px;
-      background: rgba(255, 255, 255, 0.15);
-      margin: 0 auto 32px;
-      border: none;
-    }
-
-    .stats-h2 {
+    .features-title {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 30px;
-      letter-spacing: 0;
-      color: #FFFFFF;
+      font-size: clamp(28px, 6vw, 42px);
+      letter-spacing: -1px;
+      color: #0A0A0A;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .features-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: #888;
+      text-align: center;
+      max-width: 380px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    .feature-row {
+      display: flex;
+      gap: 20px;
+      padding: 28px 0;
+      border-top: 1px solid #eee;
+    }
+
+    .feature-row:last-of-type {
+      border-bottom: 1px solid #eee;
+    }
+
+    .feature-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      color: #00E87A;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .feature-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 19px;
+      color: #0A0A0A;
       margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-body p {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.65;
+    }
+
+    .share-card-preview {
+      margin: 48px 0 40px;
       text-align: center;
     }
 
-    .stats-p {
+    .share-card-label {
       font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.5;
-      max-width: 512px;
-      margin: 0 auto 32px;
-      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    .share-card {
+      background: #0A0A0A;
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .share-card-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: #FFFFFF;
+      line-height: 1.4;
+    }
+
+    .share-card-text span {
+      color: #00E87A;
+    }
+
+    .share-card-qr {
+      background: #FFFFFF;
+      border-radius: 10px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .share-card-caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #999;
+      margin-top: 18px;
+      line-height: 1.6;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features-container > .btn-wa-dark {
+      display: flex;
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .btn-wa-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 15px 32px;
+      border-radius: 9999px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(37,211,102,0.28);
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-wa-dark:hover { 
+      transform: translateY(-2px); 
     }
 
     /* FOOTER */
@@ -436,12 +544,15 @@
       border-radius: 12px;
       text-transform: uppercase;
     }
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
 
   <!-- SECTION 1: HERO -->
-  <section class="hero">
+  <section class="hero" id="hero-section">
     <div id="yt-player" class="video-container"></div>
     <div class="video-overlay"></div>
     
@@ -460,6 +571,9 @@
         </svg>
         Join the Community
       </a>
+      <a href="#" id="btn-open-dashboard" class="btn-secondary">
+        Open Dashboard
+      </a>
       <div class="microcopy">Free to join. No app needed yet.</div>
     </div>
 
@@ -476,36 +590,94 @@
     </button>
   </section>
 
-  <!-- SECTION 2: STATS -->
-  <section class="stats-section">
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-number">21</div>
-        <div class="stat-label">days to a habit</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">Daily</div>
-        <div class="stat-label">new challenges</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">Free</div>
-        <div class="stat-label">to get started</div>
+  <!-- APP DASHBOARD -->
+  <section class="features-section hidden" id="app-dashboard" style="background:#0A0A0A; padding-top: 100px; min-height: 100vh;">
+    <div class="features-container" style="max-width: 800px; color: white;">
+      
+      <a href="#" id="btn-back-hero" style="color: #999; font-family: 'Inter', sans-serif; font-size: 13px; text-decoration: none; margin-bottom: 24px; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+      </a>
+
+      <div class="features-eyebrow" style="color:#00E87A;">YOUR DASHBOARD</div>
+      <h2 class="features-title" style="color:white; margin-bottom:40px;">
+        Daily tools to build the habit.
+      </h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+        <!-- Challenge & Streak Column -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <!-- Streak Card -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
+            <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Current Streak</div>
+            <div style="font-family:'Syne', sans-serif; font-size:48px; font-weight:800; color:#00E87A; line-height:1;">17<span style="font-size:20px; color:white; margin-left:6px;">days</span></div>
+            <p style="font-family:'Inter', sans-serif; font-size:13px; color:#aaa; margin-top:16px;">Keep showing up. You're top 10% this week.</p>
+          </div>
+
+          <!-- Daily Challenge -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+               <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px;">Today's Challenge</div>
+               <div style="background: rgba(0,232,122,0.15); color:#00E87A; padding:4px 8px; border-radius:8px; font-family:'Syne', sans-serif; font-size:12px; font-weight:bold;">Active</div>
+            </div>
+            <h3 style="font-family:'Syne', sans-serif; font-size:22px; font-weight:800; color:white; margin-bottom:8px; letter-spacing:-0.5px;">Distance & Depth</h3>
+            <p style="font-family:'Inter', sans-serif; font-size:14px; color:#aaa; margin-bottom:28px; line-height:1.6;">Walk 3km, run 2km, or complete 50 pushups.</p>
+            
+            <label style="display:flex; justify-content:center; align-items:center; gap:8px; background:#25D366; color:white; font-family:'Inter', sans-serif; font-weight:600; font-size:14px; padding:14px 24px; border-radius:999px; cursor:pointer; transition: transform 0.2s;">
+              <input type="file" accept="video/*" capture="environment" style="display:none;" onchange="alert('Proof video selected!')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Upload Proof Video
+            </label>
+          </div>
+        </div>
+
+        <!-- Leaderboard & Share Column -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Leaderboard -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
+            <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">Global Leaderboard</div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">1</div>
+                  <div style="width:36px; height:36px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; font-size:11px; font-family:'Inter', sans-serif; color:#aaa;">AM</div>
+                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500;">Alex M.</div>
+                </div>
+                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">21 🔥</div>
+              </div>
+               <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">2</div>
+                  <div style="width:36px; height:36px; border-radius:50%; background:#25D366; color:black; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; font-family:'Inter', sans-serif;">ME</div>
+                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500; color:white;">You</div>
+                </div>
+                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">17 🔥</div>
+              </div>
+               <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">3</div>
+                  <div style="width:36px; height:36px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; font-size:11px; font-family:'Inter', sans-serif; color:#aaa;">SK</div>
+                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500;">Sam K.</div>
+                </div>
+                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">12 🔥</div>
+              </div>
+            </div>
+          </div>
+          <!-- Share Card Generator -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
+             <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px;">Generate Share Card</div>
+             <button onclick="alert('Share link copied!')" style="width:100%; text-decoration:none; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:14px 24px; font-family:'Inter', sans-serif; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition: transform 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+               Share Today's Record
+             </button>
+             <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" style="width:100%; display:flex; justify-content:center; align-items:center; gap:8px; background: transparent; color: #aaa; margin-top:16px; font-family:'Inter', sans-serif; font-size:13px; text-decoration:underline;">
+               Enter WhatsApp Group
+             </a>
+          </div>
+        </div>
       </div>
     </div>
-
-    <hr class="divider">
-
-    <h2 class="stats-h2">Built around one idea.</h2>
-    <p class="stats-p">
-      Most people start and quit in three days. Fit21 fixes that with daily challenges, streak tracking, and a group of people who show up together. Join and let's move.
-    </p>
-
-    <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" class="pill-btn small">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.06-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
-      Join on WhatsApp
-    </a>
   </section>
 
   <!-- FOOTER -->
@@ -655,6 +827,28 @@
       overlay.classList.remove('show');
       deferredPrompt = null;
     });
+    // Dashboard Toggle Logic
+    const btnOpenDashboard = document.getElementById('btn-open-dashboard');
+    const btnBackHero = document.getElementById('btn-back-hero');
+    const heroSection = document.getElementById('hero-section');
+    const appDashboard = document.getElementById('app-dashboard');
+
+    if (btnOpenDashboard && btnBackHero && heroSection && appDashboard) {
+      btnOpenDashboard.addEventListener('click', function(e) {
+        e.preventDefault();
+        heroSection.classList.add('hidden');
+        appDashboard.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      });
+
+      btnBackHero.addEventListener('click', function(e) {
+        e.preventDefault();
+        appDashboard.classList.add('hidden');
+        heroSection.classList.remove('hidden');
+        window.scrollTo(0, 0);
+      });
+    }
+
   </script>
 </body>
 </html>
