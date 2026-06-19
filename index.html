@@ -35,820 +35,365 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-
-    /* SECTION 1: HERO */
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 100svh;
-      min-height: 600px;
-      background: #000;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    /* VIDEO BACKGROUND */
-    .video-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 177.78vh;
-      height: 56.25vw;
-      min-width: 100%;
-      min-height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
-    }
-
-    .video-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background: linear-gradient(
-        to bottom,
-        rgba(10,10,10,0.3) 0%,
-        rgba(10,10,10,0.6) 50%,
-        rgba(10,10,10,0.95) 100%
-      );
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0 24px;
-    }
-
-    .eyebrow {
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 11px;
-      letter-spacing: 3.5px;
-      text-transform: uppercase;
-      color: #00E87A;
-      margin-bottom: 20px;
-    }
-
-    .hero-h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(52px, 13vw, 108px);
-      line-height: 0.85;
-      letter-spacing: -4px;
-      text-transform: uppercase;
-      color: white;
-      margin-bottom: 24px;
-    }
-
-    .hero-h1 .accent {
-      color: #00E87A;
-    }
-
-    .hero-subtitle {
-       font-family: 'Inter', sans-serif;
-       font-weight: 400;
-       font-size: 18px;
-       color: rgba(255,255,255,0.7);
-       max-width: 460px;
-       line-height: 1.625;
-       margin: 0 auto 40px;
-    }
-
-    .pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: #25D366;
-      color: white;
-      font-family: 'Inter', sans-serif;
-      font-weight: 700;
-      font-size: 18px;
-      padding: 20px 48px;
-      border-radius: 9999px;
-      border: none;
-      text-decoration: none;
-      box-shadow: 0 0 40px rgba(37,211,102,0.35);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-
-    .pill-btn.small {
-      font-size: 15px;
-      padding: 15px 32px;
-    }
-
-    .pill-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(37,211,102,0.35);
-    }
-    
-    .pill-btn.small:hover {
-      transform: scale(1.05);
-    }
-
-    .pill-btn svg {
-      fill: currentColor;
-      width: 24px;
-      height: 24px;
-    }
-
-    .pill-btn.small svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .microcopy {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.025em;
-      margin-top: 16px;
-    }
-
-    /* SOUND TOGGLE */
-    .sound-toggle {
-      position: absolute;
-      bottom: 32px;
-      right: 32px;
-      z-index: 3;
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sound-toggle svg {
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    #icon-sound {
-      display: none;
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.08);
-      color: #FFFFFF;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 14px 32px;
-      border-radius: 9999px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.25);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      margin-top: 12px;
-      transition: background 0.2s, transform 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn-secondary:hover, .btn-secondary:active {
-      background: rgba(255,255,255,0.16);
-      transform: translateY(-2px);
-    }
-
-    /* EARLY FEATURES */
-    .features-section {
-      background: #FFFFFF;
-      padding: 72px 24px 80px;
-    }
-
-    .features-container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .features-eyebrow {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #00E87A;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-
-    .features-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(28px, 6vw, 42px);
-      letter-spacing: -1px;
-      color: #0A0A0A;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .features-sub {
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      color: #888;
-      text-align: center;
-      max-width: 380px;
-      margin: 0 auto 48px;
-      line-height: 1.6;
-    }
-
-    .feature-row {
-      display: flex;
-      gap: 20px;
-      padding: 28px 0;
-      border-top: 1px solid #eee;
-    }
-
-    .feature-row:last-of-type {
-      border-bottom: 1px solid #eee;
-    }
-
-    .feature-num {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-      color: #00E87A;
-      letter-spacing: 1px;
-      flex-shrink: 0;
-      padding-top: 2px;
-    }
-
-    .feature-body h3 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 19px;
-      color: #0A0A0A;
-      margin-bottom: 8px;
-      letter-spacing: -0.3px;
-    }
-
-    .feature-body p {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: #777;
-      line-height: 1.65;
-    }
-
-    .share-card-preview {
-      margin: 48px 0 40px;
-      text-align: center;
-    }
-
-    .share-card-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #999;
-      margin-bottom: 16px;
-    }
-
-    .share-card {
-      background: #0A0A0A;
-      border-radius: 20px;
-      padding: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      text-align: left;
-    }
-
-    .share-card-text {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 18px;
-      color: #FFFFFF;
-      line-height: 1.4;
-    }
-
-    .share-card-text span {
-      color: #00E87A;
-    }
-
-    .share-card-qr {
-      background: #FFFFFF;
-      border-radius: 10px;
-      width: 56px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .share-card-caption {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      color: #999;
-      margin-top: 18px;
-      line-height: 1.6;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .features-container > .btn-wa-dark {
-      display: flex;
-      width: fit-content;
-      margin: 0 auto;
-    }
-
-    .btn-wa-dark {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #25D366;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      padding: 15px 32px;
-      border-radius: 9999px;
-      text-decoration: none;
-      box-shadow: 0 4px 24px rgba(37,211,102,0.28);
-      transition: transform 0.2s, box-shadow 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn-wa-dark:hover { 
-      transform: translateY(-2px); 
-    }
-
-    /* FOOTER */
-    .footer {
-      height: 60px;
-      background: #0A0A0A;
-      border-top: 1px solid #1a1a1a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 24px;
-    }
-
-    .footer p {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* PWA INSTALL MODAL */
-    .install-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88); /* Or make it transparent if you want toast overlay */
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .install-overlay.show {
-      display: flex;
-    }
-
-    .modal-card {
-      background: white;
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-      border: 1px solid #eee;
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      grid-template-areas: 
-        "icon title"
-        "icon subtitle"
-        "instructions instructions"
-        "button button";
-      gap: 4px 16px;
-      text-align: left;
-    }
-    
-    .btn-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #999;
-    }
-
-    .logo-img {
-      grid-area: icon;
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: #f5f5f5;
-      padding: 8px;
-      display: block;
-      margin: 0;
-    }
-
-    .modal-title {
-      grid-area: title;
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      color: #0A0A0A;
-      text-transform: uppercase;
-      align-self: end;
-      margin-bottom: 0;
-      padding-right: 32px;
-    }
-
-    .modal-subtitle {
-      grid-area: subtitle;
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 12px;
-      color: #777;
-      margin-bottom: 4px;
-      align-self: start;
-      line-height: 1.4;
-    }
-
-    .install-instructions {
-      grid-area: instructions;
-      display: none;
-      background: #f8f8f8;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: left;
-      margin-bottom: 8px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      color: #666;
-      line-height: 1.8;
-      margin-top: 16px;
-    }
-
-    .install-instructions ol {
-      margin-left: 20px;
-      margin-top: 4px;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    #btnInstall {
-      grid-area: button;
-      width: 100%;
-      justify-content: center;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 15px;
-      border-radius: 12px;
-      text-transform: uppercase;
-    }
-    .hidden {
-      display: none !important;
-    }
   </style>
 </head>
 <body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 
-  <!-- SECTION 1: HERO -->
-  <section class="hero" id="hero-section">
-    <div id="yt-player" class="video-container"></div>
-    <div class="video-overlay"></div>
-    
-    <div class="hero-content">
-      <div class="eyebrow">FEEL 21 AGAIN</div>
-      <h1 class="hero-h1">
-        Chase the<br>
-        <span class="accent">Streak.</span>
-      </h1>
-      <p class="hero-subtitle">
-        Daily challenges. A community that shows up every single day.
-      </p>
-      <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" class="pill-btn">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.06-.173-.298-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Join the Community
-      </a>
-      <a href="#" id="btn-open-dashboard" class="btn-secondary">
-        Open Dashboard
-      </a>
-      <div class="microcopy">Free to join. No app needed yet.</div>
-    </div>
+  <!-- AUTH MODAL -->
+  <div id="authOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 2000; display: none; align-items: flex-end; justify-content: center; padding: 0;">
+    <div id="authModal" style="background: #111111; border-radius: 24px 24px 0 0; padding: 32px 24px 48px; width: 100%; max-width: 480px; position: relative; animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);">
+      <!-- Close button -->
+      <button onclick="closeAuthModal()" style="position: absolute; top: 16px; right: 16px; background: #222; border: none; width: 32px; height: 32px; border-radius: 50%; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
 
-    <button class="sound-toggle" id="soundBtn" aria-label="Toggle Sound">
-      <svg id="icon-muted" viewBox="0 0 24 24">
-        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-        <line x1="23" y1="9" x2="17" y2="15"></line>
-        <line x1="17" y1="9" x2="23" y2="15"></line>
-      </svg>
-      <svg id="icon-sound" viewBox="0 0 24 24">
-        <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-      </svg>
-    </button>
-  </section>
+      <!-- Logo -->
+      <div style="text-align:center; margin-bottom: 24px;">
+        <img src="/icons/icon-192.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/12563/12563330.png'" width="56" height="56" style="border-radius:14px; margin-bottom:10px;">
+        <div style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: #FFFFFF;">Fit21</div>
+      </div>
 
-  <!-- APP DASHBOARD -->
-  <section class="features-section hidden" id="app-dashboard" style="background:#0A0A0A; padding-top: 100px; min-height: 100vh;">
-    <div class="features-container" style="max-width: 800px; color: white;">
-      
-      <a href="#" id="btn-back-hero" style="color: #999; font-family: 'Inter', sans-serif; font-size: 13px; text-decoration: none; margin-bottom: 24px; display: inline-flex; align-items: center; gap: 6px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        Back to Home
-      </a>
+      <!-- STEP 1: Phone -->
+      <div id="authStep1">
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #FFFFFF; margin-bottom: 6px;">Enter your phone number</p>
+        <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #666; margin-bottom: 20px;">We'll send you a one-time code to verify.</p>
 
-      <div class="features-eyebrow" style="color:#00E87A;">YOUR DASHBOARD</div>
-      <h2 class="features-title" style="color:white; margin-bottom:40px;">
-        Daily tools to build the habit.
-      </h2>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-        <!-- Challenge & Streak Column -->
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          
-          <!-- Streak Card -->
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
-            <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Current Streak</div>
-            <div style="font-family:'Syne', sans-serif; font-size:48px; font-weight:800; color:#00E87A; line-height:1;">17<span style="font-size:20px; color:white; margin-left:6px;">days</span></div>
-            <p style="font-family:'Inter', sans-serif; font-size:13px; color:#aaa; margin-top:16px;">Keep showing up. You're top 10% this week.</p>
-          </div>
-
-          <!-- Daily Challenge -->
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-               <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px;">Today's Challenge</div>
-               <div style="background: rgba(0,232,122,0.15); color:#00E87A; padding:4px 8px; border-radius:8px; font-family:'Syne', sans-serif; font-size:12px; font-weight:bold;">Active</div>
-            </div>
-            <h3 style="font-family:'Syne', sans-serif; font-size:22px; font-weight:800; color:white; margin-bottom:8px; letter-spacing:-0.5px;">Distance & Depth</h3>
-            <p style="font-family:'Inter', sans-serif; font-size:14px; color:#aaa; margin-bottom:28px; line-height:1.6;">Walk 3km, run 2km, or complete 50 pushups.</p>
-            
-            <label style="display:flex; justify-content:center; align-items:center; gap:8px; background:#25D366; color:white; font-family:'Inter', sans-serif; font-weight:600; font-size:14px; padding:14px 24px; border-radius:999px; cursor:pointer; transition: transform 0.2s;">
-              <input type="file" accept="video/*" capture="environment" style="display:none;" onchange="alert('Proof video selected!')">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-              Upload Proof Video
-            </label>
-          </div>
+        <!-- Phone input with country code -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <select id="countryCode" style="background: #1A1A1A; border: 1px solid #2A2A2A; color: white; border-radius: 12px; padding: 14px 10px; font-family: 'Inter', sans-serif; font-size: 14px; width: 110px; flex-shrink: 0; cursor: pointer; outline: none;">
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+254">🇰🇪 +254</option>
+            <option value="+27">🇿🇦 +27</option>
+            <option value="+256">🇺🇬 +256</option>
+            <option value="+255">🇹🇿 +255</option>
+            <option value="+251">🇪🇹 +251</option>
+            <option value="+212">🇲🇦 +212</option>
+            <option value="+20">🇪🇬 +20</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+86">🇨🇳 +86</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+33">🇫🇷 +33</option>
+          </select>
+          <input type="tel" id="phoneInput" placeholder="800 000 0000" style="flex: 1; background: #1A1A1A; border: 1px solid #2A2A2A; color: white; border-radius: 12px; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s;" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onfocus="this.style.borderColor='#00E87A'" onblur="this.style.borderColor='#2A2A2A'">
         </div>
 
-        <!-- Leaderboard & Share Column -->
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <!-- Leaderboard -->
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
-            <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">Global Leaderboard</div>
-            <div style="display:flex; flex-direction:column; gap:16px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">1</div>
-                  <div style="width:36px; height:36px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; font-size:11px; font-family:'Inter', sans-serif; color:#aaa;">AM</div>
-                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500;">Alex M.</div>
-                </div>
-                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">21 🔥</div>
-              </div>
-               <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05);">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">2</div>
-                  <div style="width:36px; height:36px; border-radius:50%; background:#25D366; color:black; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; font-family:'Inter', sans-serif;">ME</div>
-                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500; color:white;">You</div>
-                </div>
-                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">17 🔥</div>
-              </div>
-               <div style="display:flex; align-items:center; justify-content:space-between;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div style="font-family:'Syne', sans-serif; font-size:14px; font-weight:bold; color:#777; width:20px;">3</div>
-                  <div style="width:36px; height:36px; border-radius:50%; background:#222; display:flex; align-items:center; justify-content:center; font-size:11px; font-family:'Inter', sans-serif; color:#aaa;">SK</div>
-                  <div style="font-family:'Inter', sans-serif; font-size:14px; font-weight:500;">Sam K.</div>
-                </div>
-                <div style="font-family:'Syne', sans-serif; font-size:15px; font-weight:bold; color:#00E87A;">12 🔥</div>
-              </div>
-            </div>
-          </div>
-          <!-- Share Card Generator -->
-          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px;">
-             <div style="font-family:'Inter', sans-serif; font-size:11px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px;">Generate Share Card</div>
-             <button onclick="alert('Share link copied!')" style="width:100%; text-decoration:none; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:14px 24px; font-family:'Inter', sans-serif; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition: transform 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-               Share Today's Record
-             </button>
-             <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" style="width:100%; display:flex; justify-content:center; align-items:center; gap:8px; background: transparent; color: #aaa; margin-top:16px; font-family:'Inter', sans-serif; font-size:13px; text-decoration:underline;">
-               Enter WhatsApp Group
-             </a>
-          </div>
+        <div id="phoneError" style="color: #FF4444; font-size: 13px; margin-bottom: 12px; display: none;"></div>
+
+        <button onclick="sendOTP()" id="sendOtpBtn" style="width: 100%; background: #00E87A; color: #0A0A0A; border: none; border-radius: 9999px; padding: 16px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; transition: opacity 0.2s;">Send Code</button>
+      </div>
+
+      <!-- STEP 2: OTP -->
+      <div id="authStep2" style="display:none;">
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #FFFFFF; margin-bottom: 6px;">Enter the 6-digit code</p>
+        <p id="otpSentTo" style="font-family: 'Inter', sans-serif; font-size: 13px; color: #666; margin-bottom: 24px;">Code sent to your number.</p>
+
+        <!-- 6 OTP boxes -->
+        <div id="otpBoxes" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+          <input type="tel" maxlength="1" class="otp-box" style="width: 44px; height: 54px; background: #1A1A1A; border: 1px solid #2A2A2A; border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; text-align: center; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <div id="otpError" style="color: #FF4444; font-size: 13px; margin-bottom: 12px; text-align: center; display: none;"></div>
+
+        <button onclick="verifyOTP()" id="verifyOtpBtn" style="width: 100%; background: #00E87A; color: #0A0A0A; border: none; border-radius: 9999px; padding: 16px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 14px; transition: opacity 0.2s;">Verify Code</button>
+
+        <div style="text-align:center;">
+          <button onclick="goBackToPhone()" style="background: none; border: none; color: #666; font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer;">← Change number</button>
+          <span style="color:#333; margin: 0 8px;">|</span>
+          <button id="resendBtn" onclick="resendOTP()" style="background: none; border: none; color: #00E87A; font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer;">Resend code</button>
+          <span id="resendTimer" style="color: #666; font-size: 13px; font-family: 'Inter', sans-serif; display: none;"></span>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2026 Fit21. All rights reserved.</p>
-  </footer>
+      <!-- STEP 3: Profile Setup -->
+      <div id="authStep3" style="display:none;">
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: #FFFFFF; margin-bottom: 6px;">Set up your profile</p>
+        <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #666; margin-bottom: 24px;">Almost there! Tell us your name.</p>
 
-  <!-- PWA INSTALL MODAL -->
-  <div id="installOverlay" class="install-overlay">
-    <div class="modal-card">
-      <button id="btnClose" class="btn-close">&times;</button>
-      <img src="https://cdn-icons-png.flaticon.com/512/12563/12563330.png" alt="Fit21 Logo" class="logo-img">
-      <h3 class="modal-title">Install Fit21</h3>
-      <p class="modal-subtitle">Add to your home screen for quick access to daily challenges.</p>
-      
-      <div id="installInstructions" class="install-instructions">
-        <strong>To install manually:</strong>
-        <ol>
-          <li>Tap the browser Menu (⋮) or Share icon.</li>
-          <li>Select Install app or Add to Home Screen.</li>
-        </ol>
+        <input type="text" id="nameInput" placeholder="Your full name" style="width: 100%; background: #1A1A1A; border: 1px solid #2A2A2A; color: white; border-radius: 12px; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 16px; outline: none; margin-bottom: 16px; transition: border-color 0.2s;" onfocus="this.style.borderColor='#00E87A'" onblur="this.style.borderColor='#2A2A2A'">
+
+        <div id="profileError" style="color: #FF4444; font-size: 13px; margin-bottom: 12px; display: none;"></div>
+
+        <button onclick="saveProfile()" style="width: 100%; background: #00E87A; color: #0A0A0A; border: none; border-radius: 9999px; padding: 16px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; transition: opacity 0.2s;">Start My Journey 🔥</button>
       </div>
-      
-      <button id="btnInstall" class="pill-btn">Install App</button>
+
     </div>
   </div>
 
-  <!-- SCRIPT BLOCK 1 & 2 -->
-  <script>
-    // SCRIPT BLOCK 1 — YouTube
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-8px); }
+      80% { transform: translateX(8px); }
+    }
+    
+    @media (max-width: 400px) {
+      .otp-box {
+        width: 38px !important;
+        height: 48px !important;
+        font-size: 18px !important;
+      }
+      #otpBoxes {
+        gap: 6px !important;
+      }
+      #authModal {
+        padding: 24px 16px 36px !important;
+      }
+    }
+    @media (max-width: 340px) {
+      .otp-box {
+        width: 34px !important;
+        height: 44px !important;
+        font-size: 16px !important;
+      }
+      #otpBoxes {
+        gap: 4px !important;
+      }
+    }
+  </style>
 
-    let player;
-    let isMuted = true;
-    const soundBtn = document.getElementById('soundBtn');
-    const iconMuted = document.getElementById('icon-muted');
-    const iconSound = document.getElementById('icon-sound');
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    window.onYouTubeIframeAPIReady = function() {
-      player = new YT.Player('yt-player', {
-        height: '2160',
-        width: '3840',
-        videoId: 'GsPvopOOyBs',
-        playerVars: {
-          autoplay: 1, 
-          controls: 0, 
-          loop: 1,
-          playlist: 'GsPvopOOyBs,YTIwk-CHgBo',
-          mute: 1, 
-          playsinline: 1, 
-          rel: 0,
-          showinfo: 0, 
-          modestbranding: 1, 
-          iv_load_policy: 3
-        },
-        events: {
-          onReady: function(e) {
-            e.target.setPlaybackQuality('hd2160');
-            e.target.playVideo();
+    const supabase = createClient(
+      'https://nodgmusskamkacofyvgz.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vZGdtdXNza2Fta2Fjb2Z5dmd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MTk3MDUsImV4cCI6MjA5NzM5NTcwNX0.iC277LL-yJypKIub7vm9KIrfaek5_i8bgRjHPNvbZBw'
+    );
+
+    // Make supabase global so React app can sync with it
+    window.globalSupabaseClient = supabase;
+
+    // Check if already logged in on page load
+    window.addEventListener('load', async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Wait 1.5s for React to mount, then navigate
+        setTimeout(() => {
+          if (window.location.pathname === '/') {
+            window.location.href = '/home';
           }
-        }
-      });
+        }, 1500);
+      }
+    });
+
+    let currentPhone = '';
+    let resendInterval = null;
+
+    window.openAuthModal = function() {
+      document.getElementById('authOverlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
     };
 
-    soundBtn.addEventListener('click', function() {
-      if (!player || typeof player.isMuted !== 'function') return;
-      if (isMuted) {
-        player.unMute();
-        player.setVolume(80);
-        isMuted = false;
-        iconMuted.style.display = 'none';
-        iconSound.style.display = 'block';
-      } else {
-        player.mute();
-        isMuted = true;
-        iconMuted.style.display = 'block';
-        iconSound.style.display = 'none';
-      }
+    window.closeAuthModal = function() {
+      document.getElementById('authOverlay').style.display = 'none';
+      document.body.style.overflow = '';
+      showStep(1);
+    };
+
+    document.getElementById('authOverlay').addEventListener('click', function(e) {
+      if (e.target === this) window.closeAuthModal();
     });
 
-    // SCRIPT BLOCK 2 — Service Worker + PWA Install
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-          .catch(function(err) { 
-            console.warn('SW failed:', err); 
-          });
+    function showStep(n) {
+      document.getElementById('authStep1').style.display = n === 1 ? 'block' : 'none';
+      document.getElementById('authStep2').style.display = n === 2 ? 'block' : 'none';
+      document.getElementById('authStep3').style.display = n === 3 ? 'block' : 'none';
+    }
+
+    window.sendOTP = async function() {
+      const code = document.getElementById('countryCode').value;
+      const number = document.getElementById('phoneInput').value.trim();
+      const errorEl = document.getElementById('phoneError');
+      const btn = document.getElementById('sendOtpBtn');
+
+      errorEl.style.display = 'none';
+
+      if (!number || number.length < 7) {
+        errorEl.textContent = 'Please enter a valid phone number.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      let cleaned = number.replace(/^0+/, '');
+      currentPhone = code + cleaned;
+
+      btn.textContent = 'Sending...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: currentPhone,
+      });
+
+      btn.textContent = 'Send Code';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+
+      if (error) {
+        errorEl.textContent = error.message || 'Failed to send code. Try again.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      document.getElementById('otpSentTo').textContent = 'Code sent to ' + currentPhone;
+      showStep(2);
+      startResendTimer();
+
+      setTimeout(() => {
+        document.querySelectorAll('.otp-box')[0].focus();
+      }, 100);
+
+      setupOTPBoxes();
+    };
+
+    function setupOTPBoxes() {
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, i) => {
+        box.value = '';
+        box.addEventListener('input', function() {
+          if (this.value.length > 1) {
+             this.value = this.value.slice(-1);
+          }
+          if (this.value.length === 1 && i < boxes.length - 1) {
+            boxes[i + 1].focus();
+          }
+          const otp = Array.from(boxes).map(b => b.value).join('');
+          if (otp.length === 6) verifyOTP();
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && i > 0) {
+            boxes[i - 1].focus();
+          }
+        });
+        box.addEventListener('focus', function() {
+          this.style.borderColor = '#00E87A';
+        });
+        box.addEventListener('blur', function() {
+          this.style.borderColor = '#2A2A2A';
+        });
       });
     }
 
-    let deferredPrompt = null;
-    const overlay = document.getElementById('installOverlay');
-    const btnInstall = document.getElementById('btnInstall');
-    const btnClose = document.getElementById('btnClose');
-    const instructions = document.getElementById('installInstructions');
+    window.verifyOTP = async function() {
+      const boxes = document.querySelectorAll('.otp-box');
+      const otp = Array.from(boxes).map(b => b.value).join('');
+      const errorEl = document.getElementById('otpError');
+      const btn = document.getElementById('verifyOtpBtn');
 
-    const isStandalone = () =>
-      window.matchMedia('(display-mode: standalone)').matches 
-      || navigator.standalone === true;
+      errorEl.style.display = 'none';
 
-    const isIOS = () => 
-      /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (!isStandalone() && !sessionStorage.getItem('pwaSkipped')) {
-        setTimeout(() => overlay.classList.add('show'), 2500);
+      if (otp.length !== 6) {
+        errorEl.textContent = 'Please enter the full 6-digit code.';
+        errorEl.style.display = 'block';
+        return;
       }
-    });
 
-    window.addEventListener('load', function() {
-      if (isIOS() && !isStandalone() && !sessionStorage.getItem('pwaSkipped')) {
-        setTimeout(function() {
-          btnInstall.style.display = 'none';
-          instructions.style.display = 'block';
-          overlay.classList.add('show');
-        }, 3000);
+      btn.textContent = 'Verifying...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: currentPhone,
+        token: otp,
+        type: 'sms',
+      });
+
+      btn.textContent = 'Verify Code';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+
+      if (error) {
+        errorEl.textContent = 'Invalid code. Please try again.';
+        errorEl.style.display = 'block';
+        document.getElementById('otpBoxes').style.animation = 'shake 0.4s';
+        setTimeout(() => {
+          document.getElementById('otpBoxes').style.animation = '';
+        }, 400);
+        return;
       }
-    });
 
-    btnInstall.addEventListener('click', async function() {
-      if (deferredPrompt) {
-        try {
-          deferredPrompt.prompt();
-          const { outcome } = await deferredPrompt.userChoice;
-          deferredPrompt = null;
-          overlay.classList.remove('show');
-        } catch(err) {
-          btnInstall.style.display = 'none';
-          instructions.style.display = 'block';
+      const userId = data.user.id;
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('name')
+        .eq('id', userId)
+        .single();
+
+      if (profile && profile.name && profile.name !== 'Fit21 User') {
+        window.location.href = '/home';
+      } else {
+        showStep(3);
+      }
+    };
+
+    window.saveProfile = async function() {
+      const name = document.getElementById('nameInput').value.trim();
+      const errorEl = document.getElementById('profileError');
+
+      errorEl.style.display = 'none';
+
+      if (!name || name.length < 2) {
+        errorEl.textContent = 'Please enter your name.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({ name: name, phone: currentPhone })
+        .eq('id', user.id);
+
+      if (error) {
+        errorEl.textContent = 'Something went wrong. Try again.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      window.location.href = '/home';
+    };
+
+    window.goBackToPhone = function() {
+      showStep(1);
+      if (resendInterval) clearInterval(resendInterval);
+    };
+
+    window.resendOTP = async function() {
+      await supabase.auth.signInWithOtp({ phone: currentPhone });
+      startResendTimer();
+    };
+
+    function startResendTimer() {
+      const resendBtn = document.getElementById('resendBtn');
+      const resendTimer = document.getElementById('resendTimer');
+      let seconds = 30;
+
+      resendBtn.style.display = 'none';
+      resendTimer.style.display = 'inline';
+      resendTimer.textContent = 'Resend in ' + seconds + 's';
+
+      if (resendInterval) clearInterval(resendInterval);
+      resendInterval = setInterval(() => {
+        seconds--;
+        resendTimer.textContent = 'Resend in ' + seconds + 's';
+        if (seconds <= 0) {
+          clearInterval(resendInterval);
+          resendTimer.style.display = 'none';
+          resendBtn.style.display = 'inline';
         }
-      } else {
-        btnInstall.style.display = 'none';
-        instructions.style.display = 'block';
-      }
-    });
-
-    btnClose.addEventListener('click', function() {
-      overlay.classList.remove('show');
-      sessionStorage.setItem('pwaSkipped', '1');
-    });
-
-    window.addEventListener('appinstalled', function() {
-      overlay.classList.remove('show');
-      deferredPrompt = null;
-    });
-    // Dashboard Toggle Logic
-    const btnOpenDashboard = document.getElementById('btn-open-dashboard');
-    const btnBackHero = document.getElementById('btn-back-hero');
-    const heroSection = document.getElementById('hero-section');
-    const appDashboard = document.getElementById('app-dashboard');
-
-    if (btnOpenDashboard && btnBackHero && heroSection && appDashboard) {
-      btnOpenDashboard.addEventListener('click', function(e) {
-        e.preventDefault();
-        heroSection.classList.add('hidden');
-        appDashboard.classList.remove('hidden');
-        window.scrollTo(0, 0);
-      });
-
-      btnBackHero.addEventListener('click', function(e) {
-        e.preventDefault();
-        appDashboard.classList.add('hidden');
-        heroSection.classList.remove('hidden');
-        window.scrollTo(0, 0);
-      });
+      }, 1000);
     }
-
   </script>
 </body>
 </html>
