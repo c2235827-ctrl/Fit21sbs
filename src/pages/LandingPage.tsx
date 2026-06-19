@@ -6,7 +6,7 @@ export default function LandingPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isMuted, setIsMuted] = useState(true);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<HTMLVideoElement>(null);
   
   useEffect(() => {
     if (user) {
@@ -14,57 +14,15 @@ export default function LandingPage() {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    // Add youtube script if not present
-    if (!document.getElementById('youtube-iframe-api')) {
-      const tag = document.createElement('script');
-      tag.id = 'youtube-iframe-api';
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
-    }
-    
-    // Setup player
-    const initPlayer = () => {
-      if (playerRef.current || !(window as any).YT) return;
-      playerRef.current = new (window as any).YT.Player('yt-player', {
-        events: {
-          onReady: (e: any) => {
-            e.target.mute();
-            e.target.playVideo();
-          }
-        }
-      });
-    };
-
-    if ((window as any).YT && (window as any).YT.Player) {
-      setTimeout(initPlayer, 100);
-    } else {
-      const prev = (window as any).onYouTubeIframeAPIReady;
-      (window as any).onYouTubeIframeAPIReady = () => {
-        if (prev) prev();
-        initPlayer();
-      };
-    }
-    
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy();
-        playerRef.current = null;
-      }
-    }
-  }, []);
-
   const toggleSound = () => {
-    const player = playerRef.current;
-    if (player && typeof player.unMute === 'function') {
+    if (playerRef.current) {
       if (isMuted) {
-        player.unMute();
-        player.setVolume(80);
-        setIsMuted(false);
+        playerRef.current.muted = false;
+        playerRef.current.volume = 0.8;
       } else {
-        player.mute();
-        setIsMuted(true);
+        playerRef.current.muted = true;
       }
+      setIsMuted(!isMuted);
     }
   };
 
@@ -87,15 +45,13 @@ export default function LandingPage() {
           pointer-events: none;
         }
         
-        .video-wrapper iframe {
+        .video-wrapper video {
           position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100vw;
-          height: calc(100vw * 16 / 9);
-          min-height: 100vh;
-          min-width: calc(100vh * 16 / 9);
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
           pointer-events: none;
         }
 
@@ -127,12 +83,13 @@ export default function LandingPage() {
       `}} />
       <section className="hero">
         <div className="video-wrapper">
-          <iframe 
-            id="yt-player"
-            src="https://www.youtube.com/embed/I_RYujJvZ7s?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=I_RYujJvZ7s&modestbranding=1&playsinline=1&enablejsapi=1" 
-            frameBorder="0" 
-            allow="autoplay; encrypted-media" 
-            allowFullScreen
+          <video
+            ref={playerRef}
+            src="https://cdn.pixabay.com/video/2024/02/15/200657-913478674_large.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
             title="Background Video"
           />
         </div>
