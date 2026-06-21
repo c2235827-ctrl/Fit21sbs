@@ -1,9 +1,11 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSubscription } from '../hooks/useSubscription';
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { subscription } = useSubscription();
 
   // Determine active path
   const path = location.pathname;
@@ -63,7 +65,14 @@ export default function BottomNav() {
         } />
         
         <NavItem to="/profile" label="Profile" icon={
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <div className="relative">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            {subscription.isPro && (
+              <div className="absolute -top-1 -right-2">
+                <span className="text-[8px] bg-[#00E87A] text-black px-1 rounded-sm font-bold">PRO</span>
+               </div>
+            )}
+          </div>
         } />
       </div>
     </div>

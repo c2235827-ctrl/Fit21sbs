@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
+import ProGate from '../components/ProGate';
 
 export default function JournalPage() {
   const { user } = useAuth();
+  const { subscription } = useSubscription();
   const [tab, setTab] = useState<'journal' | 'habits'>('journal');
   
   // Journal State
@@ -11,9 +14,13 @@ export default function JournalPage() {
   const [energy, setEnergy] = useState<number>(5);
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [journalLoading, setJournalLoading] = useState(true);
 
   // Habits State
   const [habits, setHabits] = useState<any[]>([]);
+  const [habitLogs, setHabitLogs] = useState<Record<string, string[]>>({});
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const moodOptions = [
     { emoji: '😄', label: 'Great' },
@@ -24,15 +31,92 @@ export default function JournalPage() {
   ];
 
   useEffect(() => {
+    if (user) loadTodayEntry();
+  }, [user]);
+
+  useEffect(() => {
     if (tab === 'habits') {
       fetchHabits();
     }
-  }, [tab]);
+  }, [tab, currentMonth]);
+
+  const loadTodayEntry = async () => {
+    setJournalLoading(true);
+    const today = new Date().toISOString().split('T')[0];
+    const { data } = await supabase
+      .from('journal_entries')
+      .select('*')
+      .eq('user_id', user!.id)
+      .eq('date', today)
+      .single();
+
+    if (data) {
+      setContent(data.content || '');
+      setMood(data.mood || '');
+      setEnergy(data.energy_level || 5);
+    }
+    setJournalLoading(false);
+  };
 
   const fetchHabits = async () => {
     if (!user) return;
-    const { data } = await supabase.from('habits').select('*').eq('user_id', user.id).eq('is_active', true);
-    setHabits(data || []);
+    const { data: habitsData } = await supabase
+      .from('habits')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .limit(subscription.isPro ? 100 : 3);
+    setHabits(habitsData || []);
+
+    // Fetch logs for current month
+    const start = new Date(currentMonth.getFullYear(), 
+      currentMonth.getMonth(), 1)
+      .toISOString().split('T')[0];
+    const end = new Date(currentMonth.getFullYear(), 
+      currentMonth.getMonth() + 1, 0)
+      .toISOString().split('T')[0];
+
+    const { data: logs } = await supabase
+      .from('habit_logs')
+      .select('habit_id, date, completed')
+      .eq('user_id', user.id)
+      .gte('date', start)
+      .lte('date', end);
+
+    const logMap: Record<string, string[]> = {};
+    logs?.forEach(log => {
+      if (log.completed) {
+        if (!logMap[log.habit_id]) logMap[log.habit_id] = [];
+        logMap[log.habit_id].push(log.date);
+      }
+    });
+    setHabitLogs(logMap);
+  };
+
+  const toggleHabitLog = async (habitId: string, date: string) => {
+    const isCompleted = habitLogs[habitId]?.includes(date);
+    if (isCompleted) {
+      await supabase.from('habit_logs')
+        .delete()
+        .eq('habit_id', habitId)
+        .eq('user_id', user!.id)
+        .eq('date', date);
+      setHabitLogs(prev => ({
+        ...prev,
+        [habitId]: prev[habitId]?.filter(d => d !== date) || []
+      }));
+    } else {
+      await supabase.from('habit_logs').upsert({
+        habit_id: habitId,
+        user_id: user!.id,
+        date: date,
+        completed: true
+      });
+      setHabitLogs(prev => ({
+        ...prev,
+        [habitId]: [...(prev[habitId] || []), date]
+      }));
+    }
   };
 
   const handleSaveJournal = async () => {
@@ -49,7 +133,8 @@ export default function JournalPage() {
     });
 
     setSaving(false);
-    alert('Entry saved!');
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   return (
@@ -117,6 +202,11 @@ export default function JournalPage() {
               ></textarea>
             </div>
 
+            {saved && (
+              <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-[#00E87A] text-black font-bold text-sm px-4 py-2 rounded-full z-50 animate-fade-in">
+                ✓ Entry saved
+              </div>
+            )}
             <button 
               onClick={handleSaveJournal}
               disabled={saving || !content.trim() || !mood}
@@ -127,35 +217,114 @@ export default function JournalPage() {
           </div>
         ) : (
           <div className="animate-fade-in flex flex-col gap-4">
-             <div className="text-center font-syne font-bold text-white text-lg py-2">
-                &lt; {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} &gt;
-             </div>
+            {/* Month navigator */}
+            <div className="flex items-center justify-between px-2">
+              <button 
+                onClick={() => setCurrentMonth(m => 
+                  new Date(m.getFullYear(), m.getMonth() - 1, 1)
+                )}
+                className="text-[#666] px-3 py-1"
+              >‹</button>
+              <span className="font-syne font-bold text-white text-base">
+                {currentMonth.toLocaleString('default', 
+                  { month: 'long', year: 'numeric' })}
+              </span>
+              <button 
+                onClick={() => setCurrentMonth(m => 
+                  new Date(m.getFullYear(), m.getMonth() + 1, 1)
+                )}
+                className="text-[#666] px-3 py-1"
+              >›</button>
+            </div>
 
-             {habits.length === 0 ? (
-                <div className="bg-[#1A1A1A] p-6 rounded-2xl text-center mt-4">
-                  <p className="text-gray-400 font-inter text-sm w-48 mx-auto leading-relaxed">No habits added yet. Track daily routines.</p>
-                </div>
-             ) : (
-                habits.map(habit => (
-                  <div key={habit.id} className="border-b border-[#1A1A1A] pb-4 mb-4">
-                    <div className="flex">
-                      <div className="w-[120px] shrink-0 font-inter font-semibold text-white whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-2">
-                        <span>{habit.icon}</span> {habit.name}
-                      </div>
-                      <div className="flex-1 overflow-x-auto flex gap-2 pl-2 pb-2">
-                        {/* Placeholder days */}
-                        {[...Array(7)].map((_, i) => (
-                           <div key={i} className="w-8 h-8 shrink-0 border border-[#2A2A2A] rounded-md bg-[#111111]"></div>
-                        ))}
-                      </div>
-                    </div>
+            {habits.length === 0 ? (
+              <div className="bg-[#1A1A1A] p-6 rounded-2xl text-center mt-4">
+                <p className="text-gray-400 font-inter text-sm">
+                  No habits yet. Tap + to add one.
+                </p>
+              </div>
+            ) : habits.map(habit => {
+              const daysInMonth = new Date(
+                currentMonth.getFullYear(), 
+                currentMonth.getMonth() + 1, 0
+              ).getDate();
+              const today = new Date().toISOString().split('T')[0];
+              
+              return (
+                <div key={habit.id} 
+                  className="bg-[#1A1A1A] rounded-2xl p-4 border border-[#2A2A2A]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xl">{habit.icon}</span>
+                    <span className="font-inter font-semibold text-white text-sm">
+                      {habit.name}
+                    </span>
+                    <span className="ml-auto text-[#00E87A] text-xs font-bold">
+                      {habitLogs[habit.id]?.length || 0}/{daysInMonth}
+                    </span>
                   </div>
-                ))
-             )}
+                  <div className="flex flex-wrap gap-1.5">
+                    {[...Array(daysInMonth)].map((_, i) => {
+                      const day = i + 1;
+                      const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                      const isCompleted = habitLogs[habit.id]?.includes(dateStr);
+                      const isFuture = dateStr > today;
+                      const isToday = dateStr === today;
+                      
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => !isFuture && toggleHabitLog(habit.id, dateStr)}
+                          disabled={isFuture}
+                          className={`w-8 h-8 rounded-md text-xs font-bold transition-all
+                            ${isCompleted 
+                              ? 'bg-[#00E87A] text-black' 
+                              : isToday
+                              ? 'border-2 border-[#00E87A] text-[#00E87A] bg-transparent'
+                              : isFuture
+                              ? 'bg-[#111] text-[#333] cursor-not-allowed'
+                              : 'bg-[#2A2A2A] text-[#666]'
+                            }`}
+                        >
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {/* Progress bar */}
+                  <div className="mt-3 bg-[#2A2A2A] rounded-full h-1.5">
+                    <div 
+                      className="bg-[#00E87A] h-1.5 rounded-full transition-all"
+                      style={{ 
+                        width: `${Math.round(
+                          ((habitLogs[habit.id]?.length || 0) / daysInMonth) * 100
+                        )}%` 
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
 
-             <button className="fixed bottom-24 right-4 w-14 h-14 bg-[#00E87A] rounded-full flex items-center justify-center text-black shadow-[0_0_20px_rgba(0,232,122,0.3)] z-20 transition-transform active:scale-95">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-             </button>
+            {/* Add habit FAB / Upgrade Prompt */}
+            {habits.length >= 3 && !subscription.isPro ? (
+              <div className="mt-4 mb-20">
+                <ProGate feature="Unlimited Habits">
+                  <div />
+                </ProGate>
+              </div>
+            ) : (
+              <button 
+                className="fixed bottom-24 right-4 w-14 h-14 bg-[#00E87A] 
+                  rounded-full flex items-center justify-center text-black 
+                  shadow-[0_0_20px_rgba(0,232,122,0.3)] z-20 
+                  transition-transform active:scale-95">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                  stroke="currentColor" strokeWidth="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            )}
           </div>
         )}
       </div>

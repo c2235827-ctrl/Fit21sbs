@@ -107,7 +107,7 @@ export default function LandingPage() {
           <a href="https://chat.whatsapp.com/DdQZz2IWdIw8JxwWRk8tuS" target="_blank" rel="noopener noreferrer" className="pill-btn">
             Join the Community
           </a>
-          <button onClick={() => (window as any).openAuthModal()} className="create-account-btn">
+          <button onClick={() => navigate('/auth')} className="create-account-btn">
             ✦ Create Account — Access Early Features
           </button>
           <div className="microcopy">Free to join. App features launching soon.</div>

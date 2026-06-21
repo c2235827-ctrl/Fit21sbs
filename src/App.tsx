@@ -9,6 +9,8 @@ import ChallengePage from './pages/ChallengePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import JournalPage from './pages/JournalPage';
 import ProfilePage from './pages/ProfilePage';
+import RunTrackerPage from './pages/RunTrackerPage';
+import ProPage from './pages/ProPage';
 import BottomNav from './components/BottomNav';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -81,6 +83,18 @@ export default function App() {
           <Route path="/profile" element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/run-tracker" element={
+            <ProtectedRoute>
+              <RunTrackerPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/pro" element={
+            <ProtectedRoute>
+              <ProPage />
             </ProtectedRoute>
           } />
           

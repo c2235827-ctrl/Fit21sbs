@@ -13,6 +13,7 @@ export default function HomePage() {
   const [composeMediaUrl, setComposeMediaUrl] = useState('');
   const [composeMediaType, setComposeMediaType] = useState<'video'|'image'|null>(null);
   const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchPosts();
@@ -27,7 +28,7 @@ export default function HomePage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [user]);
 
   const fetchPosts = async () => {
     try {
@@ -40,11 +41,57 @@ export default function HomePage() {
 
       if (error) throw error;
       setPosts(data || []);
+      
+      if (user && data) {
+        const { data: likes } = await supabase
+          .from('post_likes')
+          .select('post_id')
+          .eq('user_id', user.id)
+          .in('post_id', data.map((p: any) => p.id));
+        if (likes) {
+          setLikedPosts(new Set(likes.map((l: any) => l.post_id)));
+        }
+      }
     } catch (err) {
       console.error('Error fetching posts', err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleLike = async (postId: string) => {
+    if (!user) return;
+    const liked = likedPosts.has(postId);
+    if (liked) {
+      await supabase.from('post_likes')
+        .delete()
+        .eq('post_id', postId)
+        .eq('user_id', user.id);
+      setLikedPosts(prev => {
+        const n = new Set(prev); n.delete(postId); return n;
+      });
+      setPosts(prev => prev.map(p => 
+        p.id === postId 
+          ? { ...p, likes_count: Math.max(0, (p.likes_count||0) - 1) } 
+          : p
+      ));
+    } else {
+      await supabase.from('post_likes')
+        .insert({ post_id: postId, user_id: user.id });
+      setLikedPosts(prev => new Set([...prev, postId]));
+      setPosts(prev => prev.map(p => 
+        p.id === postId 
+          ? { ...p, likes_count: (p.likes_count||0) + 1 } 
+          : p
+      ));
+    }
+  };
+
+  const deletePost = async (postId: string) => {
+    await supabase.from('posts')
+      .update({ is_deleted: true })
+      .eq('id', postId);
+    setPosts(prev => prev.filter(p => p.id !== postId));
   };
 
   const handleNewPost = async (newPost: any) => {
@@ -121,8 +168,15 @@ export default function HomePage() {
                   </div>
                 </div>
                 {user?.id === post.user_id && (
-                  <button className="text-[#666] p-1">
-                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                  <button 
+                    onClick={() => deletePost(post.id)}
+                    className="text-[#666] p-1 hover:text-red-400 transition-colors"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                      stroke="currentColor" strokeWidth="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                    </svg>
                   </button>
                 )}
               </div>
@@ -146,8 +200,16 @@ export default function HomePage() {
               )}
 
               <div className="flex items-center gap-6 mt-3 pt-3 border-t border-[#2A2A2A]">
-                 <button className="flex items-center gap-2 text-[#aaa] font-semibold text-sm">
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                 <button 
+                   onClick={() => toggleLike(post.id)}
+                   className="flex items-center gap-2 font-semibold text-sm"
+                   style={{ color: likedPosts.has(post.id) ? '#00E87A' : '#aaa' }}
+                 >
+                   <svg width="20" height="20" viewBox="0 0 24 24" 
+                     fill={likedPosts.has(post.id) ? '#00E87A' : 'none'} 
+                     stroke="currentColor" strokeWidth="2">
+                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                   </svg>
                    {post.likes_count || 0}
                  </button>
                  <button className="flex items-center gap-2 text-[#aaa] font-semibold text-sm">

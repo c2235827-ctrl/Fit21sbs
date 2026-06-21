@@ -16,25 +16,28 @@ export default function LeaderboardPage() {
   const fetchLeaders = async () => {
     setLoading(true);
     try {
-      const view = tab === 'week' ? 'weekly_leaderboard' : 'leaderboard';
+      let data: any[] = [];
       
-      // In a real setup, we'd query the view. Since views might not be perfectly defined
-      // in our mock, we fallback to querying profiles ordered by streak_count
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('streak_count', { ascending: false })
-        .limit(50);
-        
-      if (data) {
-        setLeaders(data);
-        if (user) {
-          const rank = data.findIndex(p => p.id === user.id) + 1;
-          const me = data.find(p => p.id === user.id);
-          if (me) {
-            setMyRank({ rank, ...me });
-          }
-        }
+      if (tab === 'week') {
+        const { data: weekData } = await supabase
+          .from('weekly_leaderboard')
+          .select('*')
+          .limit(50);
+        data = weekData || [];
+      } else {
+        const { data: allData } = await supabase
+          .from('leaderboard')
+          .select('*')
+          .limit(50);
+        data = allData || [];
+      }
+
+      setLeaders(data);
+
+      if (user) {
+        const rank = data.findIndex(p => p.id === user.id) + 1;
+        const me = data.find(p => p.id === user.id);
+        if (me) setMyRank({ rank, ...me });
       }
     } catch (err) {
       console.error(err);

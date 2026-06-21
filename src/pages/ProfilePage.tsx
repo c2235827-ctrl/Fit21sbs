@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useSubscription } from '../hooks/useSubscription';
+import ProBadge from '../components/ProBadge';
 
 export default function ProfilePage() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const { subscription } = useSubscription();
   const [showSettings, setShowSettings] = useState(false);
+  const [streakDots, setStreakDots] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (user) loadStreakCalendar();
+  }, [user]);
+
+  const loadStreakCalendar = async () => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 29);
+    
+    const { data } = await supabase
+      .from('streak_logs')
+      .select('date, completed')
+      .eq('user_id', user!.id)
+      .gte('date', start.toISOString().split('T')[0])
+      .order('date', { ascending: true });
+
+    setStreakDots((data || [])
+      .filter(d => d.completed)
+      .map(d => d.date));
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -35,9 +60,52 @@ export default function ProfilePage() {
                  )}
               </div>
            </div>
-           <h2 className="font-syne font-extrabold text-2xl text-white text-center mb-1">{profile?.name || 'User'}</h2>
-           <p className="font-inter text-[#888] text-sm">{profile?.phone}</p>
+           
+           <div className="flex items-center gap-2 justify-center mb-1">
+              <h2 className="font-syne font-extrabold text-2xl text-white">{profile?.name || 'User'}</h2>
+              {subscription.isPro && <ProBadge />}
+            </div>
+           
+           <div className="flex flex-col items-center gap-1">
+             <p className="text-[#888] font-inter text-sm">
+               {profile?.email || ''}
+             </p>
+             {(profile?.state || profile?.country) && (
+               <p className="text-[#555] font-inter text-xs">
+                 📍 {[profile?.state, profile?.country]
+                   .filter(Boolean).join(', ')}
+               </p>
+             )}
+           </div>
         </div>
+
+        {/* PRO STATUS CARD */}
+        {subscription.isPro ? (
+          <div className="w-full bg-[#00E87A]/10 border border-[#00E87A]/30
+            rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <ProBadge size="md" />
+              </div>
+              <p className="text-[#aaa] font-inter text-xs">
+                {subscription.isGrace
+                  ? `Grace period — expires ${new Date(subscription.grace_period_end!).toLocaleDateString('en-NG')}`
+                  : `Renews in ${subscription.daysLeft} days`
+                }
+              </p>
+            </div>
+            <span className="text-2xl">⚡</span>
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate('/pro')}
+            className="w-full bg-gradient-to-r from-[#00E87A] to-[#00B85F]
+              text-black font-bold py-4 rounded-2xl flex items-center
+              justify-center gap-2 shadow-[0_4px_20px_rgba(0,232,122,0.25)]"
+          >
+            ⚡ Upgrade to Pro — ₦1,500/month
+          </button>
+        )}
 
         {/* STATS */}
         <div className="grid grid-cols-3 gap-3">
@@ -61,9 +129,20 @@ export default function ProfilePage() {
           <div className="bg-[#1A1A1A] rounded-2xl p-4 border border-[#2A2A2A]">
              <div className="text-center font-inter text-[#aaa] text-sm mb-4">Past 30 days</div>
              <div className="grid grid-cols-6 gap-2">
-                {[...Array(30)].map((_, i) => (
-                  <div key={i} className={`aspect-square rounded-full flex items-center justify-center ${i > 25 ? 'bg-[#00E87A]' : i % 4 === 0 ? 'bg-[#2A2A2A]' : 'bg-[#111111]'}`}></div>
-                ))}
+                {[...Array(30)].map((_, i) => {
+                  const d = new Date();
+                  d.setDate(d.getDate() - (29 - i));
+                  const dateStr = d.toISOString().split('T')[0];
+                  const completed = streakDots.includes(dateStr);
+                  return (
+                    <div 
+                      key={i} 
+                      className={`aspect-square rounded-full 
+                        ${completed ? 'bg-[#00E87A]' : 'bg-[#1A1A1A] border border-[#2A2A2A]'}`}
+                      title={dateStr}
+                    />
+                  );
+                })}
              </div>
           </div>
         </div>
