@@ -43,7 +43,15 @@ export default function VideoUploader({ userId, onUpload }: VideoUploaderProps) 
       const { data } = supabase.storage.from('proof-videos').getPublicUrl(path);
       onUpload(data.publicUrl);
     } catch (err: any) {
-      setError(err.message || 'Upload failed');
+      if (typeof err === 'string') {
+        setError(err);
+      } else if (err?.message) {
+        setError(err.message);
+      } else if (err?.error_description) {
+        setError(err.error_description);
+      } else {
+        setError('Upload failed. Please try again.');
+      }
     } finally {
       setUploading(false);
     }

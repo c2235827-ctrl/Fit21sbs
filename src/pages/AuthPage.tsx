@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -26,8 +26,26 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<AuthMode>('login');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState('');
+
+  const showError = (err: any) => {
+    if (!err) return;
+    if (typeof err === 'string') {
+      setError(err);
+    } else if (err?.message) {
+      setError(err.message);
+    } else if (err?.error_description) {
+      setError(err.error_description);
+    } else {
+      setError('Something went wrong. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    setError('');
+    setSuccess('');
+  }, [mode]);
 
   // Login fields
   const [loginEmail, setLoginEmail] = useState('');
@@ -47,19 +65,6 @@ export default function AuthPage() {
   // Forgot password field
   const [forgotEmail, setForgotEmail] = useState('');
 
-  const inputClass = `
-    w-full bg-[#1A1A1A] border border-[#2A2A2A]
-    focus:border-[#00E87A] outline-none
-    text-white rounded-xl px-4 py-3.5
-    font-inter text-base transition-colors
-    placeholder:text-[#444]
-  `;
-
-  const labelClass = `
-    block text-[#888] font-inter text-xs
-    font-semibold uppercase tracking-wider mb-1.5
-  `;
-
   // ── LOGIN ──
   const handleLogin = async () => {
     setError('');
@@ -74,10 +79,10 @@ export default function AuthPage() {
     });
     setLoading(false);
     if (err) {
-      if (err.message.includes('Invalid login')) {
+      if (err.message?.includes('Invalid login')) {
         setError('Incorrect email or password. Please try again.');
       } else {
-        setError(err.message);
+        showError(err);
       }
       return;
     }
@@ -137,29 +142,21 @@ export default function AuthPage() {
     setLoading(false);
 
     if (err) {
-      if (err.message.includes('already registered')) {
+      if (err.message?.includes('already registered')) {
         setError('An account with this email already exists. Please log in.');
       } else {
-        setError(err.message);
+        showError(err);
       }
       return;
     }
 
-    // Auto sign in after signup (email confirmation disabled)
-    const { error: loginErr } = await supabase.auth.signInWithPassword({
-      email: signupEmail.trim().toLowerCase(),
-      password: signupPassword,
-    });
-
-    if (!loginErr) {
-      navigate('/home', { replace: true });
-    } else {
-      // If email confirmation is required
-      setSuccess(
-        'Account created! Check your email to confirm, then log in.'
-      );
-      setMode('login');
-    }
+    // Email confirmation is ON — don't auto-login
+    // Just show success message and go to login tab
+    setError('');
+    setSuccess(
+      '✅ Account created! Check your email inbox to confirm your account, then log in.'
+    );
+    setMode('login');
   };
 
   // ── FORGOT PASSWORD ──
@@ -176,7 +173,7 @@ export default function AuthPage() {
     );
     setLoading(false);
     if (err) {
-      setError(err.message);
+      showError(err);
       return;
     }
     setSuccess('Password reset link sent! Check your email.');
@@ -228,337 +225,533 @@ export default function AuthPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex flex-col
-      items-center justify-start pt-12 pb-10 px-5 overflow-y-auto">
+    <div style={{
+      minHeight: '100svh',
+      background: '#0A0A0A',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      padding: '40px 20px 40px',
+      overflowY: 'auto',
+      fontFamily: 'Inter, sans-serif',
+    }}>
 
       {/* Logo */}
-      <div className="flex flex-col items-center mb-8">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: '32px',
+      }}>
         <img
           src="https://cdn-icons-png.flaticon.com/512/12563/12563330.png"
           alt="Fit21"
-          width={56}
-          height={56}
-          className="mb-3"
+          width={60}
+          height={60}
+          style={{ marginBottom: '12px', borderRadius: '16px' }}
         />
-        <h1 className="font-syne font-extrabold text-2xl text-white
-          tracking-tight">
+        <h1 style={{
+          fontFamily: 'Syne, sans-serif',
+          fontWeight: 800,
+          fontSize: '28px',
+          color: '#FFFFFF',
+          margin: 0,
+          letterSpacing: '-0.5px',
+        }}>
           Fit21
         </h1>
-        <p className="text-[#555] font-inter text-sm mt-1">
+        <p style={{
+          color: '#444',
+          fontSize: '14px',
+          margin: '4px 0 0',
+        }}>
           Feel 21 Again.
         </p>
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-sm bg-[#111] border border-[#1E1E1E]
-        rounded-3xl p-6">
+      <div style={{
+        width: '100%',
+        maxWidth: '400px',
+        background: '#141414',
+        border: '1px solid #222',
+        borderRadius: '24px',
+        padding: '28px 24px',
+        boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
+      }}>
 
-        {/* Mode tabs — only for login/signup */}
+        {/* Tab switcher */}
         {mode !== 'forgot' && (
-          <div className="flex bg-[#1A1A1A] rounded-2xl p-1 mb-6">
+          <div style={{
+            display: 'flex',
+            background: '#1A1A1A',
+            borderRadius: '14px',
+            padding: '4px',
+            marginBottom: '24px',
+            gap: '4px',
+          }}>
             <button
               onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
-              className={`flex-1 py-2.5 rounded-xl font-inter font-semibold
-                text-sm transition-all ${mode === 'login'
-                  ? 'bg-[#00E87A] text-black'
-                  : 'text-[#666]'
-                }`}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: '10px',
+                border: 'none',
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: mode === 'login' ? '#00E87A' : 'transparent',
+                color: mode === 'login' ? '#000' : '#555',
+              }}
             >
               Log In
             </button>
             <button
               onClick={() => { setMode('signup'); setError(''); setSuccess(''); }}
-              className={`flex-1 py-2.5 rounded-xl font-inter font-semibold
-                text-sm transition-all ${mode === 'signup'
-                  ? 'bg-[#00E87A] text-black'
-                  : 'text-[#666]'
-                }`}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: '10px',
+                border: 'none',
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: mode === 'signup' ? '#00E87A' : 'transparent',
+                color: mode === 'signup' ? '#000' : '#555',
+              }}
             >
               Create Account
             </button>
           </div>
         )}
 
-        {/* Forgot password header */}
+        {/* Forgot password back button */}
         {mode === 'forgot' && (
-          <div className="mb-6">
+          <div style={{ marginBottom: '20px' }}>
             <button
               onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
-              className="text-[#666] flex items-center gap-2 mb-4 text-sm"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#555',
+                fontSize: '14px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                marginBottom: '16px',
+                padding: 0,
+              }}
             >
               ← Back to login
             </button>
-            <h2 className="font-syne font-bold text-white text-xl">
+            <h2 style={{
+              fontFamily: 'Syne, sans-serif',
+              fontWeight: 800,
+              fontSize: '20px',
+              color: '#fff',
+              margin: '0 0 4px',
+            }}>
               Reset Password
             </h2>
-            <p className="text-[#555] font-inter text-sm mt-1">
-              Enter your email and we'll send a reset link.
+            <p style={{ color: '#555', fontSize: '13px', margin: 0 }}>
+              We'll send a reset link to your email.
             </p>
           </div>
         )}
 
-        {/* Error / Success messages */}
+        {/* Error message */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20
-            rounded-xl px-4 py-3 mb-4">
-            <p className="text-red-400 font-inter text-sm">{error}</p>
+          <div style={{
+            background: 'rgba(255,68,68,0.08)',
+            border: '1px solid rgba(255,68,68,0.2)',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            marginBottom: '16px',
+          }}>
+            <p style={{
+              color: '#FF6B6B',
+              fontSize: '13px',
+              margin: 0,
+              lineHeight: 1.5,
+            }}>
+              {typeof error === 'string'
+                ? error
+                : (error as any)?.message || 'Something went wrong. Try again.'}
+            </p>
           </div>
         )}
+
+        {/* Success message */}
         {success && (
-          <div className="bg-[#00E87A]/10 border border-[#00E87A]/20
-            rounded-xl px-4 py-3 mb-4">
-            <p className="text-[#00E87A] font-inter text-sm">{success}</p>
+          <div style={{
+            background: 'rgba(0,232,122,0.08)',
+            border: '1px solid rgba(0,232,122,0.2)',
+            borderRadius: '12px',
+            padding: '12px 16px',
+            marginBottom: '16px',
+          }}>
+            <p style={{ color: '#00E87A', fontSize: '13px', margin: 0 }}>
+              {success}
+            </p>
           </div>
         )}
 
-        {/* ── LOGIN FORM ── */}
-        {mode === 'login' && (
-          <div className="flex flex-col gap-4">
-            <div>
-              <label className={labelClass}>Email</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={loginEmail}
-                onChange={e => setLoginEmail(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                className={inputClass}
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Password</label>
-              <div className="relative">
-                <input
-                  type={showLoginPw ? 'text' : 'password'}
-                  placeholder="Your password"
-                  value={loginPassword}
-                  onChange={e => setLoginPassword(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                  className={inputClass + ' pr-12'}
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowLoginPw(!showLoginPw)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2
-                    text-[#555] hover:text-white transition-colors"
-                >
-                  {eyeIcon(showLoginPw)}
-                </button>
-              </div>
-            </div>
-
-            <button
-              onClick={handleLogin}
-              disabled={loading}
-              className="w-full bg-[#00E87A] text-black font-inter
-                font-bold py-4 rounded-full mt-2 text-base
-                disabled:opacity-60 transition-all active:scale-95"
-            >
-              {loading ? 'Logging in...' : 'Log In'}
-            </button>
-
-            <button
-              onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
-              className="text-[#555] font-inter text-sm text-center
-                hover:text-[#888] transition-colors"
-            >
-              Forgot password?
-            </button>
-          </div>
-        )}
-
-        {/* ── SIGNUP FORM ── */}
-        {mode === 'signup' && (
-          <div className="flex flex-col gap-4">
-            <div>
-              <label className={labelClass}>Full Name</label>
-              <input
-                type="text"
-                placeholder="John Doe"
-                value={signupName}
-                onChange={e => setSignupName(e.target.value)}
-                className={inputClass}
-                autoComplete="name"
-              />
-            </div>
-
-            <div>
-              <label className={labelClass}>Email Address</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={signupEmail}
-                onChange={e => setSignupEmail(e.target.value)}
-                className={inputClass}
-                autoComplete="email"
-              />
-            </div>
-
-            <div>
-              <label className={labelClass}>Phone Number</label>
-              <input
-                type="tel"
-                placeholder="+234 800 000 0000"
-                value={signupPhone}
-                onChange={e => setSignupPhone(e.target.value)}
-                className={inputClass}
-                autoComplete="tel"
-              />
-            </div>
-
-            <div>
-              <label className={labelClass}>Country</label>
-              <select
-                value={signupCountry}
-                onChange={e => {
-                  setSignupCountry(e.target.value);
-                  setSignupState('');
-                }}
-                className={inputClass + ' cursor-pointer'}
-              >
-                {COUNTRIES.map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className={labelClass}>
-                {signupCountry === 'Nigeria' ? 'State' : 'State / City'}
+        {/* Input helper */}
+        {(() => {
+          const Field = ({
+            label, children
+          }: { label: string, children: React.ReactNode }) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{
+                color: '#666',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.8px',
+                textTransform: 'uppercase',
+              }}>
+                {label}
               </label>
-              {signupCountry === 'Nigeria' ? (
-                <select
-                  value={signupState}
-                  onChange={e => setSignupState(e.target.value)}
-                  className={inputClass + ' cursor-pointer'}
-                >
-                  <option value="">Select state</option>
-                  {NIGERIA_STATES.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              ) : (
+              {children}
+            </div>
+          );
+
+          const inputStyle: React.CSSProperties = {
+            width: '100%',
+            background: '#1A1A1A',
+            border: '1px solid #2A2A2A',
+            borderRadius: '12px',
+            padding: '13px 16px',
+            color: '#fff',
+            fontSize: '15px',
+            fontFamily: 'Inter, sans-serif',
+            outline: 'none',
+            boxSizing: 'border-box',
+            transition: 'border-color 0.2s',
+          };
+
+          const selectStyle: React.CSSProperties = {
+            ...inputStyle,
+            cursor: 'pointer',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 16px center',
+            paddingRight: '40px',
+          };
+
+          const btnStyle: React.CSSProperties = {
+            width: '100%',
+            background: '#00E87A',
+            color: '#000',
+            border: 'none',
+            borderRadius: '9999px',
+            padding: '16px',
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 700,
+            fontSize: '16px',
+            cursor: 'pointer',
+            marginTop: '8px',
+            transition: 'opacity 0.2s',
+          };
+
+          // ── LOGIN ──
+          if (mode === 'login') return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Field label="Email">
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={loginEmail}
+                  onChange={e => setLoginEmail(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                  style={inputStyle}
+                  autoComplete="email"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                />
+              </Field>
+
+              <Field label="Password">
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showLoginPw ? 'text' : 'password'}
+                    placeholder="Your password"
+                    value={loginPassword}
+                    onChange={e => setLoginPassword(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                    style={{ ...inputStyle, paddingRight: '48px' }}
+                    autoComplete="current-password"
+                    onFocus={e => e.target.style.borderColor = '#00E87A'}
+                    onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPw(!showLoginPw)}
+                    style={{
+                      position: 'absolute', right: '14px',
+                      top: '50%', transform: 'translateY(-50%)',
+                      background: 'none', border: 'none',
+                      color: '#555', cursor: 'pointer', padding: 0,
+                    }}
+                  >
+                    {eyeIcon(showLoginPw)}
+                  </button>
+                </div>
+              </Field>
+
+              <button
+                onClick={handleLogin}
+                disabled={loading}
+                style={{ ...btnStyle, opacity: loading ? 0.6 : 1 }}
+              >
+                {loading ? 'Logging in...' : 'Log In'}
+              </button>
+
+              <button
+                onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
+                style={{
+                  background: 'none', border: 'none',
+                  color: '#555', fontSize: '13px',
+                  cursor: 'pointer', textAlign: 'center',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          );
+
+          // ── SIGNUP ──
+          if (mode === 'signup') return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Field label="Full Name">
                 <input
                   type="text"
-                  placeholder="Your state or city"
-                  value={signupState}
-                  onChange={e => setSignupState(e.target.value)}
-                  className={inputClass}
+                  placeholder="John Doe"
+                  value={signupName}
+                  onChange={e => setSignupName(e.target.value)}
+                  style={inputStyle}
+                  autoComplete="name"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => e.target.style.borderColor = '#2A2A2A'}
                 />
-              )}
-            </div>
+              </Field>
 
-            <div>
-              <label className={labelClass}>Password</label>
-              <div className="relative">
+              <Field label="Email Address">
                 <input
-                  type={showSignupPw ? 'text' : 'password'}
-                  placeholder="Min. 8 characters"
-                  value={signupPassword}
-                  onChange={e => setSignupPassword(e.target.value)}
-                  className={inputClass + ' pr-12'}
-                  autoComplete="new-password"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={signupEmail}
+                  onChange={e => setSignupEmail(e.target.value)}
+                  style={inputStyle}
+                  autoComplete="email"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => e.target.style.borderColor = '#2A2A2A'}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowSignupPw(!showSignupPw)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2
-                    text-[#555] hover:text-white transition-colors"
+              </Field>
+
+              <Field label="Phone Number">
+                <input
+                  type="tel"
+                  placeholder="+234 800 000 0000"
+                  value={signupPhone}
+                  onChange={e => setSignupPhone(e.target.value)}
+                  style={inputStyle}
+                  autoComplete="tel"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                />
+              </Field>
+
+              <Field label="Country">
+                <select
+                  value={signupCountry}
+                  onChange={e => { setSignupCountry(e.target.value); setSignupState(''); }}
+                  style={selectStyle}
                 >
-                  {eyeIcon(showSignupPw)}
-                </button>
-              </div>
-              {/* Password strength indicator */}
-              {signupPassword && (
-                <div className="mt-2">
-                  <div className="flex gap-1 mb-1.5">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i}
-                        className={`h-1 flex-1 rounded-full transition-all ${
-                          pwStrength.score >= i ? pwStrength.colorClass : 'bg-[#2A2A2A]'
-                        }`}
-                      />
+                  {COUNTRIES.map(c => (
+                    <option key={c} value={c}
+                      style={{ background: '#1A1A1A', color: '#fff' }}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              <Field label={signupCountry === 'Nigeria' ? 'State' : 'State / City'}>
+                {signupCountry === 'Nigeria' ? (
+                  <select
+                    value={signupState}
+                    onChange={e => setSignupState(e.target.value)}
+                    style={selectStyle}
+                  >
+                    <option value=""
+                      style={{ background: '#1A1A1A', color: '#555' }}>
+                      Select state
+                    </option>
+                    {NIGERIA_STATES.map(s => (
+                      <option key={s} value={s}
+                        style={{ background: '#1A1A1A', color: '#fff' }}>
+                        {s}
+                      </option>
                     ))}
-                  </div>
-                  <p className={`text-xs font-inter font-semibold ${pwStrength.textClass}`}>
-                    {pwStrength.label}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className={labelClass}>Confirm Password</label>
-              <input
-                type="password"
-                placeholder="Repeat your password"
-                value={signupConfirm}
-                onChange={e => setSignupConfirm(e.target.value)}
-                className={inputClass + (
-                  signupConfirm && signupPassword !== signupConfirm
-                    ? ' border-red-500/50'
-                    : signupConfirm && signupPassword === signupConfirm
-                    ? ' border-[#00E87A]/50'
-                    : ''
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    placeholder="Your state or city"
+                    value={signupState}
+                    onChange={e => setSignupState(e.target.value)}
+                    style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = '#00E87A'}
+                    onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                  />
                 )}
-                autoComplete="new-password"
-              />
-              {signupConfirm && signupPassword !== signupConfirm && (
-                <p className="text-red-400 text-xs mt-1 font-inter">
-                  Passwords don't match
-                </p>
-              )}
+              </Field>
+
+              <Field label="Password">
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showSignupPw ? 'text' : 'password'}
+                    placeholder="Min. 8 characters"
+                    value={signupPassword}
+                    onChange={e => setSignupPassword(e.target.value)}
+                    style={{ ...inputStyle, paddingRight: '48px' }}
+                    autoComplete="new-password"
+                    onFocus={e => e.target.style.borderColor = '#00E87A'}
+                    onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupPw(!showSignupPw)}
+                    style={{
+                      position: 'absolute', right: '14px',
+                      top: '50%', transform: 'translateY(-50%)',
+                      background: 'none', border: 'none',
+                      color: '#555', cursor: 'pointer', padding: 0,
+                    }}
+                  >
+                    {eyeIcon(showSignupPw)}
+                  </button>
+                </div>
+                {signupPassword && (
+                  <div>
+                    <div style={{
+                      display: 'flex', gap: '4px', marginTop: '8px'
+                    }}>
+                      {[1,2,3,4].map(i => (
+                        <div key={i} style={{
+                          flex: 1, height: '3px', borderRadius: '9999px',
+                          background: pwStrength.score >= i
+                            ? (pwStrength.score <= 1 ? '#FF4444'
+                              : pwStrength.score <= 2 ? '#FFA500'
+                              : '#00E87A')
+                            : '#2A2A2A',
+                          transition: 'background 0.3s',
+                        }} />
+                      ))}
+                    </div>
+                    <p style={{
+                      fontSize: '11px', marginTop: '4px',
+                      color: pwStrength.score <= 1 ? '#FF4444'
+                        : pwStrength.score <= 2 ? '#FFA500'
+                        : '#00E87A',
+                    }}>
+                      {pwStrength.label}
+                    </p>
+                  </div>
+                )}
+              </Field>
+
+              <Field label="Confirm Password">
+                <input
+                  type="password"
+                  placeholder="Repeat your password"
+                  value={signupConfirm}
+                  onChange={e => setSignupConfirm(e.target.value)}
+                  style={{
+                    ...inputStyle,
+                    borderColor: signupConfirm
+                      ? signupPassword !== signupConfirm
+                        ? 'rgba(255,68,68,0.5)'
+                        : 'rgba(0,232,122,0.5)'
+                      : '#2A2A2A',
+                  }}
+                  autoComplete="new-password"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => {
+                    e.target.style.borderColor = signupConfirm
+                      ? signupPassword !== signupConfirm
+                        ? 'rgba(255,68,68,0.5)'
+                        : 'rgba(0,232,122,0.5)'
+                      : '#2A2A2A';
+                  }}
+                />
+                {signupConfirm && signupPassword !== signupConfirm && (
+                  <p style={{
+                    color: '#FF6B6B', fontSize: '12px', margin: '2px 0 0'
+                  }}>
+                    Passwords don't match
+                  </p>
+                )}
+              </Field>
+
+              <button
+                onClick={handleSignup}
+                disabled={loading || signupPassword.length < 8
+                  || signupPassword !== signupConfirm}
+                style={{
+                  ...btnStyle,
+                  opacity: (loading || signupPassword.length < 8
+                    || signupPassword !== signupConfirm) ? 0.5 : 1,
+                }}
+              >
+                {loading ? 'Creating account...' : 'Create My Account 🔥'}
+              </button>
+
+              <p style={{
+                color: '#333', fontSize: '12px',
+                textAlign: 'center', lineHeight: 1.6, margin: 0,
+              }}>
+                By creating an account you agree to Fit21's terms.
+              </p>
             </div>
+          );
 
-            <button
-              onClick={handleSignup}
-              disabled={loading || signupPassword.length < 8 || signupPassword !== signupConfirm}
-              className="w-full bg-[#00E87A] text-black font-inter
-                font-bold py-4 rounded-full mt-2 text-base
-                disabled:opacity-60 transition-all active:scale-95"
-            >
-              {loading ? 'Creating account...' : 'Create My Account 🔥'}
-            </button>
-
-            <p className="text-[#444] font-inter text-xs text-center leading-relaxed">
-              By creating an account you agree to Fit21's terms.
-              Your data is safe and never shared.
-            </p>
-          </div>
-        )}
-
-        {/* ── FORGOT PASSWORD FORM ── */}
-        {mode === 'forgot' && (
-          <div className="flex flex-col gap-4">
-            <div>
-              <label className={labelClass}>Email Address</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                value={forgotEmail}
-                onChange={e => setForgotEmail(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleForgot()}
-                className={inputClass}
-                autoComplete="email"
-              />
+          // ── FORGOT PASSWORD ──
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <Field label="Email Address">
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={forgotEmail}
+                  onChange={e => setForgotEmail(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleForgot()}
+                  style={inputStyle}
+                  autoComplete="email"
+                  onFocus={e => e.target.style.borderColor = '#00E87A'}
+                  onBlur={e => e.target.style.borderColor = '#2A2A2A'}
+                />
+              </Field>
+              <button
+                onClick={handleForgot}
+                disabled={loading}
+                style={{ ...btnStyle, opacity: loading ? 0.6 : 1 }}
+              >
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
             </div>
-
-            <button
-              onClick={handleForgot}
-              disabled={loading}
-              className="w-full bg-[#00E87A] text-black font-inter
-                font-bold py-4 rounded-full text-base
-                disabled:opacity-60 transition-all active:scale-95"
-            >
-              {loading ? 'Sending...' : 'Send Reset Link'}
-            </button>
-          </div>
-        )}
+          );
+        })()}
 
       </div>
-
     </div>
   );
 }
